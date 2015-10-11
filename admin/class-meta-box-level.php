@@ -131,12 +131,8 @@ final class Members_Role_Levels_Meta_Box_Level {
 	 */
 	public function update_role_level( $role ) {
 
-		// Check that a level was posted.
-		if ( isset( $_POST['mrl-role-level'] ) && isset( $_POST['mrl_role_level_nonce'] ) ) {
-
-			// Verify the nonce and make sure we have a level.
-			if ( ! wp_verify_nonce( $_POST['mrl_role_level_nonce'], 'role_level' ) )
-				return;
+		// Verify the nonce before proceeding.
+		if ( isset( $_POST['mrl_role_level_nonce'] ) && wp_verify_nonce( $_POST['mrl_role_level_nonce'], 'role_level' ) ) {
 
 			// Get the current role object to edit.
 			$role = get_role( members_sanitize_role( $role ) );
@@ -146,7 +142,7 @@ final class Members_Role_Levels_Meta_Box_Level {
 				return;
 
 			// Get the posted level.
-			$new_level = $_POST['mrl-role-level'];
+			$new_level = isset( $_POST['mrl-role-level'] ) ? $_POST['mrl-role-level'] : '';
 
 			// Make sure the posted level is in the whitelisted array of levels.
 			if ( ! mrl_is_valid_level( $new_level ) )
